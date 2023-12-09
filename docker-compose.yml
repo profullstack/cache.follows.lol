@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  follow-cache:
+    image: nixos/nix
+    build: .
+    volumes:
+      - .:/app
+    working_dir: /app
+    ports:
+      - "127.0.0.1:7702:8801"
+    environment:
+      - PRIMALSERVER_HOST=0.0.0.0
+    command: >
+      nix --extra-experimental-features 'nix-command flakes' develop -c sh -c '$start_primal_caching_service'
+    networks:
+      - follows_network
+networks:
+    follows_network:
+      name: follows_network
+
